@@ -1,0 +1,338 @@
+import java.util.*;
+import java.util.concurrent.*;
+
+public class Main {
+   // Question class
+    static class Question {
+        String question;
+        String[] options;
+        int correctAnswer;
+
+        Question(String q, String[] o, int a) {
+            question = q;
+            options = o;
+            correctAnswer = a;
+        }
+    }
+ static Map<String, String> users = new HashMap<>();
+   
+public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+
+        // Welcome Screen
+        System.out.println("\n==========================================");
+        System.out.println("         SKILLGAUGE SYSTEM");
+        System.out.println("   Smart Online Quiz Application ");
+        System.out.println("==========================================");
+
+        // Login returns username
+        String username = login(sc);
+
+        if (username == null) {
+            System.out.println("Exiting...");
+            return;
+        }
+
+        String category = chooseCategory(sc);
+        String difficulty = chooseDifficulty(sc);
+
+        Question[] quiz = getQuestions(category, difficulty);
+
+        runQuiz(sc, username, quiz);
+
+        sc.close();
+    }
+
+    //  Login / Register
+    public static String login(Scanner sc) {
+
+        System.out.println("\n========== USER AUTHENTICATION ==========");
+        System.out.println("1. Login\n2. Register");
+
+        int choice = sc.nextInt();
+        sc.nextLine();
+
+        if (choice == 2) {
+            System.out.print("Create Username: ");
+            String user = sc.nextLine();
+
+            System.out.print("Create Password: ");
+            String pass = sc.nextLine();
+
+            users.put(user, pass);
+            System.out.println("Registration Successful!");
+            return user;
+
+        } else {
+            System.out.print("Enter Username: ");
+            String user = sc.nextLine();
+
+            System.out.print("Enter Password: ");
+            String pass = sc.nextLine();
+
+            if (users.containsKey(user) && users.get(user).equals(pass)) {
+                System.out.println("Login Successful!");
+                return user;
+            } else {
+                System.out.println("Invalid Credentials!");
+                return null;
+            }
+        }
+    }
+
+    //  Category selection
+    public static String chooseCategory(Scanner sc) {
+
+        System.out.println("\n========== SELECT QUIZ CATEGORY ==========");
+        System.out.println("1. Java");
+        System.out.println("2. DBMS");
+        System.out.println("3. C Programming");
+        System.out.println("4. General Knowledge");
+
+        int choice = sc.nextInt();
+
+        switch (choice) {
+            case 1: return "Java";
+            case 2: return "DBMS";
+            case 3: return "C";
+            case 4: return "GK";
+            default: return "Java";
+        }
+    }
+
+    // Difficulty selection
+    public static String chooseDifficulty(Scanner sc) {
+
+        System.out.println("\n========== SELECT DIFFICULTY LEVEL ==========");
+        System.out.println("1. Easy");
+        System.out.println("2. Medium");
+        System.out.println("3. Hard");
+
+        int choice = sc.nextInt();
+
+        switch (choice) {
+            case 1: return "Easy";
+            case 2: return "Medium";
+            case 3: return "Hard";
+            default: return "Easy";
+        }
+    }
+
+    // Full Question Bank
+    public static Question[] getQuestions(String category, String difficulty) {
+
+        // ================= JAVA =================
+        if (category.equals("Java") && difficulty.equals("Easy")) {
+            return new Question[]{
+                new Question("What is JVM?", new String[]{"Java Virtual Machine", "Java Vendor Machine", "Just Virtual Machine", "None"}, 1),
+                new Question("Which keyword creates object?", new String[]{"class", "new", "object", "create"}, 2),
+                new Question("Java is a ___ language?", new String[]{"Low level", "High level", "Machine", "Assembly"}, 2),
+                new Question("Which method is entry point?", new String[]{"start()", "main()", "run()", "init()"}, 2),
+                new Question("Which data type stores numbers?", new String[]{"int", "String", "boolean", "char"}, 1)
+            };
+        }
+
+        if (category.equals("Java") && difficulty.equals("Medium")) {
+            return new Question[]{
+                new Question("Which keyword is used for inheritance?", new String[]{"this", "super", "extends", "implements"}, 3),
+                new Question("Which package contains Scanner?", new String[]{"java.io", "java.util", "java.lang", "java.net"}, 2),
+                new Question("Which loop runs at least once?", new String[]{"for", "while", "do-while", "foreach"}, 3),
+                new Question("Method overloading is?", new String[]{"Encapsulation", "Polymorphism", "Inheritance", "Abstraction"}, 2),
+                new Question("Which keyword stops loop?", new String[]{"exit", "break", "stop", "return"}, 2)
+            };
+        }
+
+        if (category.equals("Java") && difficulty.equals("Hard")) {
+            return new Question[]{
+                new Question("Which handles multiple threads?", new String[]{"OOP", "Multithreading", "Inheritance", "Encapsulation"}, 2),
+                new Question("Which is not OOP concept?", new String[]{"Inheritance", "Encapsulation", "Compilation", "Polymorphism"}, 3),
+                new Question("Which memory stores objects?", new String[]{"Stack", "Heap", "Register", "Cache"}, 2),
+                new Question("Which is interface keyword?", new String[]{"class", "interface", "implements", "extends"}, 2),
+                new Question("Which exception is checked?", new String[]{"IOException", "ArithmeticException", "NullPointerException", "ArrayIndex"}, 1)
+            };
+        }
+
+        // ================= DBMS =================
+        if (category.equals("DBMS") && difficulty.equals("Easy")) {
+            return new Question[]{
+                new Question("What is DBMS?", new String[]{"Database System", "Data Backup", "Both", "None"}, 1),
+                new Question("Which stores data?", new String[]{"Table", "Query", "Form", "Report"}, 1),
+                new Question("Primary key is?", new String[]{"Unique", "Duplicate", "Null", "Optional"}, 1),
+                new Question("SQL stands for?", new String[]{"Structured Query Language", "Simple Query", "System Query", "None"}, 1),
+                new Question("Which is database?", new String[]{"MySQL", "Java", "HTML", "CSS"}, 1)
+            };
+        }
+
+        if (category.equals("DBMS") && difficulty.equals("Medium")) {
+            return new Question[]{
+                new Question("Which normal form removes redundancy?", new String[]{"1NF", "2NF", "3NF", "All"}, 4),
+                new Question("Which command retrieves data?", new String[]{"INSERT", "UPDATE", "SELECT", "DELETE"}, 3),
+                new Question("Foreign key is?", new String[]{"Unique", "Reference", "Primary", "None"}, 2),
+                new Question("Which is DML?", new String[]{"SELECT", "CREATE", "DROP", "ALTER"}, 1),
+                new Question("Which is constraint?", new String[]{"NOT NULL", "SELECT", "TABLE", "VIEW"}, 1)
+            };
+        }
+
+        if (category.equals("DBMS") && difficulty.equals("Hard")) {
+            return new Question[]{
+                new Question("Which join returns all records?", new String[]{"INNER", "LEFT", "RIGHT", "FULL"}, 4),
+                new Question("Which index improves speed?", new String[]{"Primary", "Secondary", "Both", "None"}, 3),
+                new Question("ACID stands for?", new String[]{"Atomicity", "Action", "Access", "None"}, 1),
+                new Question("Transaction state includes?", new String[]{"Active", "Failed", "Committed", "All"}, 4),
+                new Question("Deadlock occurs when?", new String[]{"No resource", "Circular wait", "One process", "None"}, 2)
+            };
+        }
+
+        // ================= C =================
+        if (category.equals("C") && difficulty.equals("Easy")) {
+            return new Question[]{
+                new Question("Who developed C?", new String[]{"Dennis Ritchie", "James Gosling", "Bjarne", "Guido"}, 1),
+                new Question("C is ___ language?", new String[]{"High", "Low", "Middle", "None"}, 3),
+                new Question("Which symbol ends statement?", new String[]{";", ":", ".", ","}, 1),
+                new Question("Which is input function?", new String[]{"printf", "scanf", "main", "return"}, 2),
+                new Question("Which is output?", new String[]{"scanf", "printf", "cin", "cout"}, 2)
+            };
+        }
+
+        if (category.equals("C") && difficulty.equals("Medium")) {
+            return new Question[]{
+                new Question("Which is loop?", new String[]{"for", "if", "switch", "case"}, 1),
+                new Question("Which stores address?", new String[]{"int", "pointer", "float", "char"}, 2),
+                new Question("Array index starts from?", new String[]{"0", "1", "2", "-1"}, 1),
+                new Question("Which keyword defines constant?", new String[]{"const", "define", "static", "final"}, 1),
+                new Question("Which is header file?", new String[]{"stdio.h", "main.c", "test.java", "file.txt"}, 1)
+            };
+        }
+
+        if (category.equals("C") && difficulty.equals("Hard")) {
+            return new Question[]{
+                new Question("Which is dynamic memory?", new String[]{"malloc", "int", "float", "char"}, 1),
+                new Question("Which frees memory?", new String[]{"free()", "delete()", "remove()", "clear()"}, 1),
+                new Question("Pointer stores?", new String[]{"Value", "Address", "Name", "None"}, 2),
+                new Question("Recursion is?", new String[]{"Loop", "Function calling itself", "Array", "Pointer"}, 2),
+                new Question("Which is preprocessor?", new String[]{"#include", "main()", "return", "int"}, 1)
+            };
+        }
+
+        // ================= GK =================
+        if (category.equals("GK") && difficulty.equals("Easy")) {
+            return new Question[]{
+                new Question("Capital of India?", new String[]{"Delhi", "Mumbai", "Kolkata", "Chennai"}, 1),
+                new Question("National animal?", new String[]{"Lion", "Tiger", "Elephant", "Dog"}, 2),
+                new Question("National bird?", new String[]{"Peacock", "Crow", "Parrot", "Sparrow"}, 1),
+                new Question("Currency of India?", new String[]{"Dollar", "Rupee", "Euro", "Yen"}, 2),
+                new Question("Colors in flag?", new String[]{"3", "4", "5", "2"}, 1)
+            };
+        }
+
+        if (category.equals("GK") && difficulty.equals("Medium")) {
+            return new Question[]{
+                new Question("Who is PM of India?", new String[]{"Modi", "Rahul", "Kejriwal", "None"}, 1),
+                new Question("Largest ocean?", new String[]{"Atlantic", "Pacific", "Indian", "Arctic"}, 2),
+                new Question("Fastest animal?", new String[]{"Tiger", "Cheetah", "Lion", "Horse"}, 2),
+                new Question("Earth is ___ planet?", new String[]{"2nd", "3rd", "4th", "5th"}, 2),
+                new Question("Sun is a?", new String[]{"Planet", "Star", "Satellite", "Asteroid"}, 2)
+            };
+        }
+
+        if (category.equals("GK") && difficulty.equals("Hard")) {
+            return new Question[]{
+                new Question("First President of India?", new String[]{"Rajendra Prasad", "Gandhi", "Nehru", "Patel"}, 1),
+                new Question("UN founded in?", new String[]{"1945", "1950", "1930", "1920"}, 1),
+                new Question("Largest desert?", new String[]{"Sahara", "Thar", "Gobi", "Arctic"}, 1),
+                new Question("Smallest country?", new String[]{"India", "Vatican", "USA", "UK"}, 2),
+                new Question("Speed of light?", new String[]{"3x10^8", "3x10^6", "3x10^5", "None"}, 1)
+            };
+        }
+
+        return new Question[0];
+    }
+
+    // Quiz
+    public static void runQuiz(Scanner sc, String name, Question[] quiz) {
+
+        int score = 0;
+
+        System.out.println("\n==========================================");
+        System.out.println("        QUIZ STARTED - GOOD LUCK!");
+        System.out.println("        Player: " + name);
+        System.out.println("==========================================");
+
+        for (int i = 0; i < quiz.length; i++) {
+
+            Question q = quiz[i];
+
+            System.out.println("\n------------------------------------------");
+            System.out.println("Question " + (i + 1) + ": " + q.question);
+            System.out.println("------------------------------------------");
+
+            for (int j = 0; j < q.options.length; j++) {
+                System.out.println((j + 1) + ". " + q.options[j]);
+            }
+
+            ExecutorService ex = Executors.newSingleThreadExecutor();
+
+            Future<Integer> f = ex.submit(() -> {
+                System.out.print("Answer within 10 seconds: ");
+                return sc.nextInt();
+            });
+
+            try {
+                int ans = f.get(10, TimeUnit.SECONDS);
+
+                if (ans == q.correctAnswer) {
+                    System.out.println("Correct!");
+                    score++;
+                } else {
+                    System.out.println("Wrong!");
+                }
+
+            } catch (TimeoutException e) {
+                System.out.println("Time's up!");
+                f.cancel(true);
+            } catch (Exception e) {
+                System.out.println("Invalid input!");
+                sc.nextLine();
+            }
+
+            ex.shutdownNow();
+        }
+
+        int total = quiz.length;
+        int wrong = total - score;
+        double percentage = (score * 100.0) / total;
+
+        System.out.println("\n==========================================");
+        System.out.println("              QUIZ RESULT");
+        System.out.println("==========================================");
+
+        System.out.println("Total Questions   : " + total);
+        System.out.println("Correct Answers   : " + score);
+        System.out.println("Wrong Answers     : " + wrong);
+        System.out.printf("Score Percentage  : %.2f%%\n", percentage);
+
+        char grade = (percentage >= 90) ? 'A' :
+                     (percentage >= 75) ? 'B' :
+                     (percentage >= 50) ? 'C' : 'D';
+
+        System.out.println("Final Grade       : " + grade);
+
+        System.out.println("\n==========================================");
+        System.out.println("              PERFORMANCE FEEDBACK");
+        System.out.println("==========================================");
+
+        if (percentage >= 90) {
+            System.out.println(" Excellent! You are a master!");
+        } else if (percentage >= 75) {
+            System.out.println(" Very Good! Strong understanding.");
+        } else if (percentage >= 50) {
+            System.out.println(" Good effort! Keep practicing.");
+        } else {
+            System.out.println(" Needs improvement. Study basics again.");
+        }
+
+        System.out.println("\n==========================================");
+        System.out.println(" Thank you for using SkillGauge System ");
+        System.out.println("==========================================");
+    }
+}
